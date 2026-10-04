@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>布局调试台</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<aside>
+  <h1>布局调试台</h1>
+  <div class="sub">源图像 · 逻辑窗口 · 物理像素 三套坐标联调</div>
+
+  <div id="conflict" class="conflict">
+    <div id="conflictText"></div>
+    <div style="margin-top:8px">
+      <button id="btnTakeRemote" class="danger">放弃本地，加载远程</button>
+      <button id="btnForceSave" class="secondary">保留本地，强制保存</button>
+    </div>
+  </div>
+
+  <h2>1. 模拟屏幕</h2>
+  <label>设备预设</label>
+  <select id="device"></select>
+  <div class="row">
+    <div><label>逻辑宽 (DIP)</label><input id="vpW" type="number" min="80" step="1"/></div>
+    <div><label>逻辑高 (DIP)</label><input id="vpH" type="number" min="80" step="1"/></div>
+  </div>
+  <div class="row">
+    <div><label>DPR</label><input id="dpr" type="number" min="0.5" max="8" step="0.25"/></div>
+    <div>
+      <label>方向</label>
+      <div class="seg">
+        <button id="rot0" class="active">竖屏</button>
+        <button id="rot90">横屏90</button>
+      </div>
+    </div>
+  </div>
+  <div class="metric" style="margin-top:6px">
+    物理像素 = <b><span id="physSize"></span></b>
+  </div>
+
+  <h2>2. 显示模式</h2>
+  <div class="seg">
+    <button id="modeCover" class="active">铺满 cover</button>
+    <button id="modeContain">完整 contain</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <div><label>焦点 X</label><input id="focusX" type="number" min="0" max="1" step="0.01"/></div>
+    <div><label>焦点 Y</label><input id="focusY" type="number" min="0" max="1" step="0.01"/></div>
+  </div>
+
+  <h2>3. 编辑会话</h2>
+  <div class="row">
+    <button id="btnUndo" class="secondary" disabled>撤销</button>
+    <button id="btnRedo" class="secondary" disabled>重做</button>
+  </div>
+  <div class="sub" style="margin-top:6px">撤销只作用于本次编辑基础，不跨编辑会话。</div>
+
+  <h2>4. 发布</h2>
+  <button id="btnSave">保存并入库</button>
+  <button id="btnRefresh" class="secondary">重新拉取</button>
+  <label style="margin-top:10px">发布新背景图（缩放中途发布也安全）</label>
+  <input id="imgFile" type="file" accept="image/png,image/jpeg" />
+  <button id="btnPublish" class="secondary" style="margin-top:6px">发布图片</button>
+
+  <h2>状态</h2>
+  <div class="metric">
+    版本 <b id="versionTag">-</b> · checksum <b id="checksumTag">-</b><br/>
+    基线 <b id="baseTag">-</b> · 当前编辑代际 <b id="genTag">0</b><br/>
+    未保存改动 <b id="dirtyTag">否</b>
+  </div>
+</aside>
+
+<main>
+  <div id="stage">
+    <div id="screenBox" style="width:360px;height:640px">
+      <canvas id="preview"></canvas>
+      <div class="overlay">
+        <span class="badge" id="vpBadge"></span>
+        <span class="badge" style="top:auto;bottom:8px" id="cropBadge"></span>
+      </div>
+      <div id="cropBox"></div>
+      <div id="focusMark"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <h2 style="margin-top:4px">理论裁切框（源图像坐标 / 上报内容）</h2>
+    <div class="metric" id="theoryLine"></div>
+    <div class="metric" style="margin-top:6px" id="hitLine">在模拟屏上移动鼠标验证触摸命中反算</div>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:4px">最近现场上报（C 展示端 / Web 展示端真实上报，不能只看预览）</h2>
+    <button id="btnLoadReports" class="secondary">刷新上报</button>
+    <div id="reports" style="margin-top:8px"></div>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:4px">版本历史</h2>
+    <div id="history"></div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="/geo.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

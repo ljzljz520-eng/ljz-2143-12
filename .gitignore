@@ -23,3 +23,12 @@ __pycache__/
 *.log
 .env
 .env.*
+
+# 本项目构建产物
+visual-window-app
+src/test_core
+*.o
+
+# 后端运行时状态/上报/上传图片
+data/
+assets/img-*
