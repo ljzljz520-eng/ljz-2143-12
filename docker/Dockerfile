@@ -7,7 +7,7 @@ RUN apt-get update \
        build-essential \
        make \
        libsdl2-dev \
-       libsdl2-image-dev \
+       libpng-dev \
        xvfb \
        x11vnc \
        openbox \
@@ -15,6 +15,8 @@ RUN apt-get update \
        websockify \
        x11-utils \
        ca-certificates \
+       curl \
+       python3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

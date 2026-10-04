@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+body { margin:0; font:14px/1.5 system-ui,-apple-system,"PingFang SC",sans-serif; background:#10141b; color:#e6e9ef; }
+header { padding:14px 20px; background:#171d27; border-bottom:1px solid #263040; }
+h1 { margin:0; font-size:18px; }
+.warn { color:#ffcc66; font-size:13px; margin-top:4px; }
+main { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:14px; }
+.panel { background:#171d27; border:1px solid #263040; border-radius:10px; padding:14px; }
+.panel.sim,.panel.cfg { grid-column:1; }
+.panel.preview-panel,.panel.field { grid-column:2; grid-row:span 2; }
+h2 { font-size:14px; margin:0 0 10px; color:#9fc3ff; }
+.row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:10px; }
+label { display:flex; flex-direction:column; font-size:12px; gap:3px; color:#aeb8c8; }
+input,select,button { background:#0f141c; color:#e6e9ef; border:1px solid #2f3a4d; border-radius:6px; padding:6px 9px; font-size:13px; }
+input[type=number]{width:110px;}
+button { cursor:pointer; }
+button:hover { border-color:#4a6fa5; }
+button.primary { background:#1f4e8c; border-color:#2f6ab0; font-weight:600; }
+.muted { color:#8893a5; font-size:12px; }
+.mono { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; }
+#stage { background:#000; border:1px solid #2a3446; border-radius:6px; max-width:100%; cursor:crosshair; }
+.conflict { border:1px solid #c77f2e; background:#2a2013; border-radius:8px; padding:10px; margin-top:8px; }
+.hidden { display:none; }
+table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+th,td { border-bottom:1px solid #263040; padding:4px 6px; text-align:left; font-family:ui-monospace,monospace; }
+#toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:#22304a; border:1px solid #3d5a8a; padding:8px 14px; border-radius:8px; opacity:0; transition:.25s; pointer-events:none; }
+#toast.show { opacity:1; }

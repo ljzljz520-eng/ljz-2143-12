@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>布局调试台 · Layout Debugger</title>
+<link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+<header>
+  <h1>布局调试台</h1>
+  <div class="warn">管理端预览仅用于编辑；现场验收必须以展示端实际上报裁切框与终端截图为准。</div>
+</header>
+
+<main>
+  <section class="panel sim">
+    <h2>1. 浏览器模拟屏幕</h2>
+    <div class="row">
+      <label>预设
+        <select id="preset">
+          <option value="">自定义</option>
+          <option value="390,844,3">iPhone 14 (390×844 @3)</option>
+          <option value="412,915,2.625">Pixel (412×915 @2.625)</option>
+          <option value="768,1024,2">iPad (768×1024 @2)</option>
+          <option value="1280,720,1">桌面 1280×720 @1</option>
+          <option value="1920,1080,1">FHD 横屏 1920×1080</option>
+          <option value="240,800,2">极窄窗口 240×800 @2</option>
+        </select>
+      </label>
+      <label>逻辑宽(dp) <input id="lw" type="number" value="390" min="32"/></label>
+      <label>逻辑高(dp) <input id="lh" type="number" value="844" min="32"/></label>
+      <label>DPR <input id="dpr" type="number" value="3" step="0.25" min="1" max="5"/></label>
+      <label>旋转
+        <select id="rot">
+          <option value="0">0° 竖屏</option>
+          <option value="90">90° 顺时针</option>
+          <option value="180">180°</option>
+          <option value="270">270°</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <button data-burst="10,300">快速拖窗 ×10/300ms</button>
+      <button data-burst="1,0">应用一次尺寸</button>
+      <span class="muted" id="coalesce-info"></span>
+    </div>
+  </section>
+
+  <section class="panel preview-panel">
+    <h2>2. 预览（编辑参考，非验收依据）</h2>
+    <div id="stage-wrap">
+      <canvas id="stage" width="560" height="420"></canvas>
+      <div id="phys-label" class="muted"></div>
+    </div>
+  </section>
+
+  <section class="panel cfg">
+    <h2>3. 配置（用户最终选择，保存即入库为新版本）</h2>
+    <div class="row">
+      <label>显示方式
+        <select id="fit">
+          <option value="cover">铺满 cover（裁切溢出）</option>
+          <option value="contain">完整显示 contain（黑边）</option>
+          <option value="stretch">拉伸 stretch（变形，仅兼容）</option>
+        </select>
+      </label>
+      <label>焦点 <span id="focus-val" class="mono"></span>
+        <small class="muted">在预览图上拖动可改焦点</small>
+      </label>
+      <label>纹理策略
+        <select id="strategy">
+          <option value="atlas">预生成多尺寸 atlas</option>
+          <option value="runtime">运行时缩放 runtime</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <label>显存预算(MB) <input id="budget-mb" type="number" value="32" min="1"/></label>
+      <label>纹理条数上限 <input id="budget-n" type="number" value="16" min="1"/></label>
+      <label>最小档 <input id="min-b" type="number" value="128" step="32"/></label>
+      <label>最大档 <input id="max-b" type="number" value="2048" step="128"/></label>
+    </div>
+    <div class="row">
+      <button id="btn-save" class="primary">保存配置（新版本）</button>
+      <button id="btn-undo">撤销（仅本次编辑）</button>
+      <button id="btn-open-session">新编辑会话</button>
+      <span id="save-state" class="mono"></span>
+    </div>
+    <div id="conflict" class="conflict hidden">
+      <strong>⚠ 远程已更新</strong>
+      <p>你基于 v<span id="conf-base"></span> 的编辑与服务端 v<span id="conf-server"></span>
+         冲突。服务端 fit=<span id="conf-fit"></span>。迟到的远程尺寸事件不会覆盖你的未保存选择；
+         请选择：</p>
+      <button id="conf-keep">保留我的选择，另存为新版本</button>
+      <button id="conf-discard">放弃本地编辑，采用远程</button>
+    </div>
+  </section>
+
+  <section class="panel field">
+    <h2>4. 展示端实际上报（现场口径）</h2>
+    <button id="btn-refresh-reports">刷新上报</button>
+    <table id="reports">
+      <thead><tr><th>设备</th><th>版本</th><th>图rev</th><th>物理/逻辑</th><th>DPR</th><th>旋转</th><th>fit</th><th>归一化裁切[x,y,w,h]</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="muted">验收方法：对比此处展示端真实上报与理论裁切框（tests/e2e 自动完成截图比对），
+       不能只看上面的管理端预览。</p>
+  </section>
+</main>
+
+<div id="toast"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
